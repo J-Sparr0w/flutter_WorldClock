@@ -22,11 +22,12 @@ class _ChooseLocationState extends State<ChooseLocation> {
       timezones = responseBody;
       timezones.forEach((timezone) {
         List<String> place = timezone.split('/');
-        if (place.length == 2) {
-          availablePlaces.add(place[1]);
-        }
+         (place.length >= 2) ?
+          availablePlaces.add(place[1])
+          :availablePlaces.add(place);
+        
       });
-      print(availablePlaces);
+    print('Loading $timezones');
 
       setState(() {
         status = "complete";
@@ -37,6 +38,7 @@ class _ChooseLocationState extends State<ChooseLocation> {
   }
 
   void updateTime(place) async {
+    print('Loading $place');
     WorldTime _instance = WorldTime(location: place);
     await _instance.getTime();
     Navigator.pop(context, {'time': _instance.time, 'place': _instance.place});
@@ -57,21 +59,17 @@ class _ChooseLocationState extends State<ChooseLocation> {
         ),
         body: ListView.builder(
           itemCount: availablePlaces.length,
-          itemBuilder: (BuildContext context, int index) {
-            return GestureDetector(
-              child: Container(
-                height: 50.0,
-                child: Center(
-                  child: Text(
-                    availablePlaces[index],
-                    style: TextStyle(
-                      fontSize: 18.0,
-                    ),
-                  ),
+          itemBuilder: ( context,  index) {
+            return ListTile(
+              title: Text(
+                availablePlaces[index],
+                style: TextStyle(
+                  fontSize: 18.0,
                 ),
               ),
               onTap: () {
                 updateTime(timezones[index]);
+                print('timezone selected ${timezones[index]}');
               },
             );
           },

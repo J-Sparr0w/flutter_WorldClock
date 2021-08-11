@@ -4,10 +4,10 @@ import 'dart:convert';
 class WorldTime {
   String time = "";
   String location;
- late String place;
+  late String place;
 
-  WorldTime({ required this.location}){
-this.place=location.split('/')[1];
+  WorldTime({required this.location}) {
+    this.place = location.split('/').last;
   }
 
   Future getTime() async {
@@ -18,11 +18,16 @@ this.place=location.split('/')[1];
       final Map _responseBody = jsonDecode(_response.body);
 
       final String _dateTime = _responseBody['utc_datetime'];
-      final _localTime = DateTime.parse(_dateTime).toLocal();
+      String _offsetH = _responseBody['utc_offset'].substring(1,3);
+      String _offsetM = _responseBody['utc_offset'].substring(4);
+
+      DateTime _localTime = DateTime.parse(_dateTime);
+      _localTime = _localTime.add(Duration(hours: int.parse(_offsetH),minutes:int.parse(_offsetM) ));
       final String _currentTime = _localTime.toString().substring(11, 16);
       // final String _location = _responseBody['timezone'].split('/')[1];
       print(_responseBody);
       time = _currentTime;
+      print(time);
     } catch (e) {
       print("error occured :$e");
     }

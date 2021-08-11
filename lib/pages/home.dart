@@ -12,7 +12,8 @@ class _HomeState extends State<Home> {
     responseArg = (responseArg.isNotEmpty)
         ? responseArg
         : (ModalRoute.of(context)!.settings.arguments as Map);
-    print(responseArg);
+    print("time ${responseArg['time']}");
+    print("place ${responseArg['place']}");
     String time = responseArg['time'];
     String place = responseArg['place'];
 
@@ -38,7 +39,7 @@ class _HomeState extends State<Home> {
                 setState(() {
                   responseArg = {
                     'time': result['time'],
-                    'location': result['location']
+                    'place': result['place']
                   };
                 });
               },
